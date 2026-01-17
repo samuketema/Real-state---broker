@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AppPalette {
-  static const primary = Color(0xFF1aab81);
-  static const secondary = Color(0xFF3498db);
+  static const secondary = Color(0xFF1aab81);
+  static const primary = Color(0xFF3498db);
 
   static const darker = Color(0xFF3E4249);
   static const cardColor = Colors.white;
