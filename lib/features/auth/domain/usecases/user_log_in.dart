@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:realstate/core/error/failure.dart';
 import 'package:realstate/core/usecase/usecase.dart';
-import 'package:realstate/features/auth/data/repositories/authrepositoryimpl.dart';
+import 'package:realstate/features/auth/domain/repository/auth_repository.dart';
 
 class UserLogIn implements Usecase<String, UserLogInParams> {
-  final AuthRepositoryImpl authReopsitory;
+  final AuthRepository authReopsitory;
 
   UserLogIn({required this.authReopsitory});
   @override
