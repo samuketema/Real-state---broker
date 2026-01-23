@@ -1,8 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+
 import 'package:realstate/core/theme/app_palette.dart';
 
 class AuthElevatedButton extends StatelessWidget {
-  const AuthElevatedButton({super.key , required this.text});
+  const AuthElevatedButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+  });
+  final VoidCallback onPressed;
   final String text;
 
   @override
@@ -19,9 +26,7 @@ class AuthElevatedButton extends StatelessWidget {
         end: AlignmentGeometry.bottomRight)
       ),
       child: ElevatedButton(
-        onPressed: () {
-          
-        },
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           fixedSize: const Size(395, 55),
           backgroundColor: Colors.transparent,
