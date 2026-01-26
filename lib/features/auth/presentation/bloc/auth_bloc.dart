@@ -10,9 +10,9 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUp _userSignUp;
   final UserLogIn _userLogIn;
-  AuthBloc({required UserSignUp userSignUp ,required UserLogIn userLogIn})
+  AuthBloc({required UserSignUp userSignUp, required UserLogIn userLogIn})
     : _userSignUp = userSignUp,
-    _userLogIn = userLogIn,
+      _userLogIn = userLogIn,
       super(AuthInitial()) {
     on<AuthSignUp>((event, emit) async {
       final res = await _userSignUp.call(
@@ -22,11 +22,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           password: event.password,
         ),
       );
-      res.fold((l) =>emit( AuthFailure(l.message)), (r) =>emit( AuthSuccess(r)));
+      res.fold(
+        (l) => emit(AuthFailure(l.message)),
+        (r) => emit(AuthSuccess(r)),
+      );
     });
-    on<AuthLogIn>((event, emit)async {
-      final res = await _userLogIn.call(UserLogInParams(email: event.email, password: event.password));
-      res.fold((l)=> emit(AuthFailure(l.message)), (r)=> emit(AuthSuccess(r)));
-    },);
+    on<AuthLogIn>((event, emit) async {
+      final res = await _userLogIn.call(
+        UserLogInParams(email: event.email, password: event.password),
+      );
+      res.fold(
+        (l) => emit(AuthFailure(l.message)),
+        (r) => emit(AuthSuccess(r)),
+      );
+    });
   }
 }
