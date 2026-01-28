@@ -1,8 +1,12 @@
+import 'package:fpdart/fpdart.dart';
 import 'package:realstate/core/error/exception.dart';
 import 'package:realstate/features/auth/data/models/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract interface class AuthRemoteDatasource {
+
+  Session? get currentUserSession;
+
   Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
@@ -12,12 +16,27 @@ abstract interface class AuthRemoteDatasource {
     required String email,
     required String password,
   });
+  Future<UserModel?> getCurrentUser();
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final SupabaseClient supabase;
 
   AuthRemoteDatasourceImpl({required this.supabase});
+  
+  @override
+  Future<UserModel?> getCurrentUser() async {
+    try {
+      if (currentUserSession != null) {
+      final res = await supabase.from("profiles").select().eq('user_id', currentUserSession!.user.id);
+        return UserModel.fromJson(res.first);
+      }
+      return null;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
 @override
 Future<UserModel> logInWithEmailPassword({
   required String email,
@@ -81,5 +100,9 @@ Future<UserModel> signUpWithEmailPassword({
     throw ServerException(e.toString());
   }
 }
+
+  @override
+  Session? get currentUserSession => supabase.auth.currentSession;
+
 
 }
