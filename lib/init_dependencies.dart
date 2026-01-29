@@ -4,6 +4,7 @@ import 'package:realstate/features/auth/data/datasources/auth_remote_datasource.
 import 'package:realstate/features/auth/data/repositories/authrepositoryimpl.dart';
 import 'package:realstate/features/auth/domain/repository/auth_repository.dart';
 import 'package:realstate/features/auth/domain/usecases/user_log_in.dart';
+import 'package:realstate/features/auth/domain/usecases/user_loggedIn.dart';
 import 'package:realstate/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:realstate/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -24,5 +25,6 @@ void _initAUth() {
   sl.registerFactory<AuthRepository>(()=>AuthRepositoryImpl(authRemoteDataSource: sl()));
   sl.registerFactory(()=>UserSignUp(authRepository: sl()));
   sl.registerFactory(() => UserLogIn(authReopsitory: sl()));
-  sl.registerLazySingleton(()=> AuthBloc(userSignUp: sl(), userLogIn: sl()));
+  sl.registerFactory(() => UserLoggedin(authRepository: sl()));
+  sl.registerLazySingleton(()=> AuthBloc(userSignUp: sl(), userLogIn: sl(), userLoggedin: sl()));
 }
