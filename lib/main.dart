@@ -13,7 +13,7 @@ void main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (_) => sl<AuthBloc>()
+          create: (_) => sl<AuthBloc>()..add(AuthLoggedIn())
         ),
       ],
       child: const MyApp(),
@@ -21,8 +21,21 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    
+    super.initState();
+    
+  }
 
   @override
   Widget build(BuildContext context) {
