@@ -4,3 +4,5 @@ import 'package:realstate/core/error/failure.dart';
 abstract interface class Usecase<SuccessType, Params> {
   Future<Either<Failure,SuccessType>> call(Params params);
 }
+
+final class NoParams{ }
