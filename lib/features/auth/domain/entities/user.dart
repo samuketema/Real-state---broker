@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class User {
   final String profileId;
   final String userId;
@@ -23,24 +24,5 @@ class User {
 
   bool get isDeleted => deletedAt != null;
 
-  User copyWith({
-    String? username,
-    String? fullName,
-    String? avatarUrl,
-    String? website,
-    DateTime? updatedAt,
-    DateTime? deletedAt,
-  }) {
-    return User(
-      profileId: profileId,
-      userId: userId,
-      username: username ?? this.username,
-      fullName: fullName ?? this.fullName,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      website: website ?? this.website,
-      createdAt: createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      deletedAt: deletedAt ?? this.deletedAt,
-    );
-  }
+ 
 }

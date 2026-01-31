@@ -29,7 +29,29 @@ class UserModel extends User {
           : null,
     );
   }
-
+ UserModel copyWith({
+    String? profileId,
+    String? userId,
+    String? username,
+    String? fullName,
+    String? avatarUrl,
+    String? website,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+  }) {
+    return UserModel(
+      profileId: profileId ?? this.profileId,
+      userId: userId ?? this.userId,
+      username: username ?? this.username,
+      fullName: fullName ?? this.fullName,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      website: website ?? this.website,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
+  }
   /// To Supabase insert/update
   Map<String, dynamic> toJson() {
     return {
