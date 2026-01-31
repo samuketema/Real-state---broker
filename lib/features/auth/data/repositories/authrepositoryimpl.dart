@@ -13,13 +13,16 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> logInWithEmailPassword({
     required String email,
     required String password,
-  })async {
+  }) async {
     try {
-      final res = await authRemoteDataSource.logInWithEmailPassword(email: email, password: password);
-    return right(res);
+      final res = await authRemoteDataSource.logInWithEmailPassword(
+        email: email,
+        password: password,
+      );
+      return right(res);
     } on ServerException catch (e) {
       return left(Failure(e.message));
-    }catch(e){
+    } catch (e) {
       return left(Failure('Signup failed: $e'));
     }
   }
@@ -39,19 +42,19 @@ class AuthRepositoryImpl implements AuthRepository {
       return right(userId);
     } on ServerException catch (e) {
       return left(Failure(e.message));
-    }catch (e) {
-  return left(Failure('Signup failed: $e'));
-}
+    } catch (e) {
+      return left(Failure('Signup failed: $e'));
+    }
   }
-  
+
   @override
-  Future<Either<Failure, User>> getCurrentUser()async {
+  Future<Either<Failure, User>> getCurrentUser() async {
     try {
       final user = await authRemoteDataSource.getCurrentUser();
-      if (user == null) {
-        return left(Failure("User is not logged in"));
-      }
-     return right(user);
+
+      return right(user!);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
     } catch (e) {
       return left(Failure(e.toString()));
     }
