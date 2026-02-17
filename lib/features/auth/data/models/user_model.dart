@@ -1,4 +1,4 @@
-import 'package:realstate/features/auth/domain/entities/user.dart';
+import 'package:realstate/core/common/entities/user.dart';
 
 class UserModel extends User {
   const UserModel({
