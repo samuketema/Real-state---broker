@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:realstate/core/error/failure.dart';
 import 'package:realstate/core/usecase/usecase.dart';
-import 'package:realstate/features/auth/domain/entities/user.dart';
+import 'package:realstate/core/common/entities/user.dart';
 import 'package:realstate/features/auth/domain/repository/auth_repository.dart';
 
 class UserLogIn implements Usecase<User, UserLogInParams> {

@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:realstate/core/usecase/usecase.dart';
-import 'package:realstate/features/auth/domain/entities/user.dart';
+import 'package:realstate/core/common/entities/user.dart';
 import 'package:realstate/features/auth/domain/usecases/user_log_in.dart';
 import 'package:realstate/features/auth/domain/usecases/user_loggedIn.dart';
 import 'package:realstate/features/auth/domain/usecases/user_sign_up.dart';
