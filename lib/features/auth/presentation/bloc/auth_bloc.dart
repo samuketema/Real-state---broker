@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:realstate/core/common/app_user/cubit/app_user_cubit.dart';
 import 'package:realstate/core/usecase/usecase.dart';
 import 'package:realstate/core/common/entities/user.dart';
 import 'package:realstate/features/auth/domain/usecases/user_log_in.dart';
@@ -13,10 +14,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUp _userSignUp;
   final UserLogIn _userLogIn;
   final UserLoggedin _userLoggedin;
-  AuthBloc({required UserSignUp userSignUp, required UserLogIn userLogIn, required UserLoggedin userLoggedin})
+  final AppUserCubit _appUserCubit;
+  AuthBloc({required UserSignUp userSignUp, required UserLogIn userLogIn,required AppUserCubit appUserCubit, required UserLoggedin userLoggedin})
     : _userSignUp = userSignUp,
       _userLogIn = userLogIn,
       _userLoggedin = userLoggedin,
+      _appUserCubit = appUserCubit,
       super(AuthInitial()) {
     on<AuthSignUp>((event, emit) async {
       final res = await _userSignUp.call(
@@ -28,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       res.fold(
         (l) => emit(AuthFailure(l.message)),
-        (r) => emit(AuthSuccess(r)),
+        (r) => _emitAuthSuccess(r),
       );
     });
     on<AuthLogIn>((event, emit) async {
@@ -37,7 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       res.fold(
         (l) => emit(AuthFailure(l.message)),
-        (r) => emit(AuthSuccess(r)),
+        (r) => _emitAuthSuccess(r),
       );
     });
 
@@ -45,12 +48,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final res = await _userLoggedin.call(NoParams());
        res.fold(
         (l) => emit(AuthFailure(l.message)),
-        (r) {
-          debugPrint(  r.fullName);
-          emit(
-          AuthSuccess(r));
-        },
+        (r) => _emitAuthSuccess(r),
       );
     },);
+  }
+  void _emitAuthSuccess(User user, ){
+    _appUserCubit.updateUser(user);
+    emit(AuthSuccess(user));
   }
 }
