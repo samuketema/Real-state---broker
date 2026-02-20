@@ -15,44 +15,62 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserLogIn _userLogIn;
   final UserLoggedin _userLoggedin;
   final AppUserCubit _appUserCubit;
-  AuthBloc({required UserSignUp userSignUp, required UserLogIn userLogIn,required AppUserCubit appUserCubit, required UserLoggedin userLoggedin})
-    : _userSignUp = userSignUp,
-      _userLogIn = userLogIn,
-      _userLoggedin = userLoggedin,
-      _appUserCubit = appUserCubit,
-      super(AuthInitial()) {
-    on<AuthSignUp>((event, emit) async {
-      final res = await _userSignUp.call(
-        UserSignUpParams(
-          name: event.name,
-          email: event.email,
-          password: event.password,
-        ),
-      );
-      res.fold(
-        (l) => emit(AuthFailure(l.message)),
-        (r) => _emitAuthSuccess(r),
-      );
-    });
-    on<AuthLogIn>((event, emit) async {
-      final res = await _userLogIn.call(
-        UserLogInParams(email: event.email, password: event.password),
-      );
-      res.fold(
-        (l) => emit(AuthFailure(l.message)),
-        (r) => _emitAuthSuccess(r),
-      );
-    });
 
-    on<AuthLoggedIn>((event, emit) async{
-      final res = await _userLoggedin.call(NoParams());
-       res.fold(
-        (l) => emit(AuthFailure(l.message)),
-        (r) => _emitAuthSuccess(r),
-      );
-    },);
+  AuthBloc({
+    required UserSignUp userSignUp,
+    required UserLogIn userLogIn,
+    required AppUserCubit appUserCubit,
+    required UserLoggedin userLoggedin,
+  })  : _userSignUp = userSignUp,
+        _userLogIn = userLogIn,
+        _userLoggedin = userLoggedin,
+        _appUserCubit = appUserCubit,
+        super(AuthInitial()) {
+    on<AuthEvent>((_,emit)=>emit(AuthLoading()));
+    on<AuthSignUp>(_onSignUp);
+    on<AuthLogIn>(_onLogIn);
+    on<AuthLoggedIn>(_onLoggedIn);
   }
-  void _emitAuthSuccess(User user, ){
+
+
+  Future<void> _onSignUp(AuthSignUp event, Emitter<AuthState> emit) async {
+    final res = await _userSignUp.call(
+      UserSignUpParams(
+        name: event.name,
+        email: event.email,
+        password: event.password,
+      ),
+    );
+
+    res.fold(
+      (l) => emit(AuthFailure(l.message)),
+      (r) => _emitAuthSuccess(emit, r),
+    );
+  }
+
+  Future<void> _onLogIn(AuthLogIn event, Emitter<AuthState> emit) async {
+    final res = await _userLogIn.call(
+      UserLogInParams(email: event.email, password: event.password),
+    );
+
+    res.fold(
+      (l) => emit(AuthFailure(l.message)),
+      (r) => _emitAuthSuccess(emit, r),
+    );
+  }
+
+  Future<void> _onLoggedIn(AuthLoggedIn event, Emitter<AuthState> emit) async {
+    final res = await _userLoggedin.call(NoParams());
+
+    res.fold(
+      (l) => emit(AuthFailure(l.message)),
+      (r) => _emitAuthSuccess(emit, r),
+    );
+  }
+
+
+
+  void _emitAuthSuccess(Emitter<AuthState> emit, User user) {
     _appUserCubit.updateUser(user);
     emit(AuthSuccess(user));
   }
