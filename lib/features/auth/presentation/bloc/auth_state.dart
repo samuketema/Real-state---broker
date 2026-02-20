@@ -15,4 +15,4 @@ final class AuthFailure extends AuthState{
   final String message;
   AuthFailure(this.message);
 }
-final class AuthUnauthenticated extends AuthState{}
+final class AuthUnauthenticated extends AuthState{}   
