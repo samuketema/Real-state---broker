@@ -21,7 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void dispose() {
     emailController.dispose();
-    passwordController.dispose();
+    passwordController.dispose(); 
     nameController.dispose();
     super.dispose();
   }
@@ -38,6 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
           }
+          if (state is AuthSuccess){}
         },
         builder: (context, state) {
           if (state is AuthLoading) {
