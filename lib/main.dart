@@ -16,9 +16,7 @@ void main() async {
         BlocProvider<AuthBloc>(
           create: (_) => sl<AuthBloc>()..add(AuthLoggedIn()),
         ),
-        BlocProvider<AppUserCubit>(
-          create: (_) => sl<AppUserCubit>(),
-        ),
+        BlocProvider<AppUserCubit>(create: (_) => sl<AppUserCubit>()),
       ],
       child: const MyApp(),
     ),
@@ -33,12 +31,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
-    
     super.initState();
-    
   }
 
   @override
@@ -47,7 +42,19 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.themeMode,
       title: 'Real State',
-      home: const SignInPage(),
+      home: BlocSelector<AppUserCubit, AppUserState, bool>(
+        selector: (state) {
+          return state is AppUserLoggedin;
+        },
+        builder: (context, isLoggedIn) {
+          if (isLoggedIn) {
+            return Scaffold(
+              body:  Center(child: Text("LoggedIn"),),
+            );
+          }
+          return const SignInPage();
+        },
+      ),
     );
   }
 }
