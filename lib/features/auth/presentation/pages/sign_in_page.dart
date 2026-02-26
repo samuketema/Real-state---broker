@@ -25,13 +25,16 @@ class _SignInPageState extends State<SignInPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure){
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.toString())));
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+          if (state is AuthSuccess) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successfully logged in')));
           }
         },
         builder: (context, state) {
-          if (state is AuthLoading){
-            return Center( child: CircularProgressIndicator(),);
-          }
+          final isLoading = state is AuthLoading;
           return Padding(
             padding: const EdgeInsets.all(10),
             child: SingleChildScrollView(
@@ -67,10 +70,22 @@ class _SignInPageState extends State<SignInPage> {
                       controller: passwordController,
                     ),
                     const SizedBox(height: 25),
-                    AuthElevatedButton(text: "Sign In",onPressed: () {
-                      context.read<AuthBloc>().add(AuthLogIn(email: emailController.text.trim(), password: passwordController.text.trim()));
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Successfully loggedIn")));
-                    },),
+                    AuthElevatedButton(
+                      text: "Sign In",
+                      isLoading: isLoading,
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              if (formkey.currentState?.validate() ?? false) {
+                                context.read<AuthBloc>().add(
+                                      AuthLogIn(
+                                        email: emailController.text.trim(),
+                                        password: passwordController.text.trim(),
+                                      ),
+                                    );
+                              }
+                            },
+                    ),
                     const SizedBox(height: 15),
                     TextButton(
                       onPressed: () {

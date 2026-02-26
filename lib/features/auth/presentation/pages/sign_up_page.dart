@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -34,21 +35,30 @@ class _SignUpPageState extends State<SignUpPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
           }
-          if (state is AuthSuccess){}
+          if (state is AuthSuccess) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Account created successfully')),
+            );
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const SignInPage()),
+            );
+          }
         },
         builder: (context, state) {
-          if (state is AuthLoading) {
-            return Center(child: CircularProgressIndicator());
-          }
+          final isLoading = state is AuthLoading;
           return Padding(
             padding: const EdgeInsets.all(10),
             child: SingleChildScrollView(
               // allows scrolling if keyboard overlaps
-              child: Column(
+              child: Form(
+                key: _formKey,
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -85,15 +95,20 @@ class _SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 25),
                   AuthElevatedButton(
                     text: "Sign Up",
-                    onPressed: () {
-                      context.read<AuthBloc>().add(
-                        AuthSignUp(
-                          name: nameController.text.trim(),
-                          email: emailController.text.trim(),
-                          password: passwordController.text.trim(),
-                        ),
-                      );
-                    },
+                    isLoading: isLoading,
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              context.read<AuthBloc>().add(
+                                    AuthSignUp(
+                                      name: nameController.text.trim(),
+                                      email: emailController.text.trim(),
+                                      password: passwordController.text.trim(),
+                                    ),
+                                  );
+                            }
+                          },
                   ),
                   const SizedBox(height: 15),
                   TextButton(
@@ -122,7 +137,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ],
               ),
             ),
-          );
+          ));
         },
       ),
     );
