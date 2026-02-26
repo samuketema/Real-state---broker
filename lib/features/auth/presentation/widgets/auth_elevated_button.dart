@@ -6,11 +6,13 @@ import 'package:realstate/core/theme/app_palette.dart';
 class AuthElevatedButton extends StatelessWidget {
   const AuthElevatedButton({
     super.key,
-    required this.onPressed,
+    this.onPressed,
     required this.text,
+    this.isLoading = false,
   });
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,16 @@ class AuthElevatedButton extends StatelessWidget {
             
           ),
         ),
-        child: Text(text, style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 18 ),),
+        child: isLoading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(text, style: const TextStyle(fontWeight: FontWeight.bold ,fontSize: 18 ),),
       ),
     );
   }
