@@ -102,6 +102,4 @@ Future<UserModel> signUpWithEmailPassword({
 
   @override
   Session? get currentUserSession => supabase.auth.currentSession;
-
-
 }
