@@ -30,3 +30,4 @@ void _initAUth() {
   sl.registerFactory(() => UserLoggedin(authRepository: sl()));
   sl.registerLazySingleton(()=> AuthBloc(appUserCubit: sl(), userSignUp: sl(), userLogIn: sl(), userLoggedin: sl()));
 }
+    
