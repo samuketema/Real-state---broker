@@ -17,8 +17,8 @@ void main() async {
           create: (_) => sl<AuthBloc>()..add(AuthLoggedIn()),
         ),
         BlocProvider<AppUserCubit>(create: (_) => sl<AppUserCubit>()),
-      ],
-      child: const MyApp(),
+      ],  
+      child: const MyApp(), 
     ),
   );
 }
